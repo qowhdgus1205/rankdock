@@ -24,7 +24,7 @@ The public neural M2 baselines use the same `RankModel` backbone so that compari
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Running](#running)
-- [Validation and Reproducibility Checks](#validation-and-reproducibility-checks)
+- [Validation](#validation)
 - [Optional Settings](#optional-settings)
 - [Outputs and Large Files](#outputs-and-large-files)
 
@@ -158,7 +158,7 @@ python scripts/round_retrieval.py \
   --out_dir outputs/enamine2m_retrieval
 ```
 
-## Validation and Reproducibility Checks
+## Validation
 
 Before running large experiments, check that CSV rows and embedding parts are aligned:
 
