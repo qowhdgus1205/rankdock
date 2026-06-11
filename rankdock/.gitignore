@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Local environments
+.venv/
+venv/
+.conda-envs/
+.conda-pkgs/
+.vendor/
+
+# Generated artifacts
+output/
+outputs/
+138M_models/
+docked_dude/
+data/*.csv
+*.npy
+*.npz
+*.pkl
+*.pt
+*.pth
+*.bin
+*.pdbqt
+*.sdf
+*.mol2
+
+# Manuscript build outputs
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz

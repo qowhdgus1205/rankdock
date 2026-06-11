@@ -1,0 +1,19 @@
+name: rankdock
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - tqdm
+  - matplotlib
+  - rdkit
+  - pytorch
+  - torchvision
+  - gpytorch
+  - pip
+  - pip:
+      - transformers

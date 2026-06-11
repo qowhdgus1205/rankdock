@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Local environments and vendored packages
+.conda-envs/
+.conda-pkgs/
+.vendor/
+.venv/
+venv/
+
+# Large data/model/output artifacts
+data/*.csv
+data/*.npy
+data/*.pkl
+models/*.pth
+models/*.pt
+models/*.bin
+output/
+outputs/
+138M_models/
+docked_dude/
+
+# Generated molecule/docking files
+*.pdbqt
+*.sdf
+*.mol2
+
+# Manuscript build outputs
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz

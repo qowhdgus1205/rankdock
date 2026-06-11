@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rankdock"
+version = "0.1.0"
+description = "Rank-learning active learning pipeline for large-scale molecular docking screens."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+  {name = "RankDock contributors"}
+]
+dependencies = [
+  "numpy",
+  "pandas",
+  "tqdm",
+  "torch",
+  "gpytorch",
+  "rdkit",
+  "transformers",
+  "scikit-learn",
+]
+
+[project.optional-dependencies]
+graph = [
+  "torch-geometric",
+  "torch-scatter",
+  "torch-sparse",
+  "networkx",
+  "torchvision",
+]
+plots = [
+  "matplotlib",
+  "scipy",
+]
+
+[project.scripts]
+rankdock-embed = "rankdock.cli.embeddings:main"
+rankdock-sample = "rankdock.cli.sampling:main"
+rankdock-run = "rankdock.cli.active_learning:main"
+rankdock-retrieval = "rankdock.retrieval:main"
+rankdock-score-final = "rankdock.score_final:main"
+
+[tool.setuptools.packages.find]
+include = ["rankdock*"]
