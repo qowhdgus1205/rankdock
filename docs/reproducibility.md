@@ -6,11 +6,11 @@ This repository is organized so that model comparisons isolate the training obje
 
 All neural M2 baselines use the same `RankModel` backbone:
 
-- `mlp` / `rank_mse`: MSE regression on docking scores
+- `mlp`: MSE regression on docking scores
 - `triplet`: triplet ranking objective
 - `pairwise`: pairwise logistic ranking objective
 
-The previous standalone `MLPRegressor` architecture has been removed from the public pipeline because it changes both architecture and loss, making the loss comparison less persuasive.
+The previous standalone MLP regression architecture has been removed from the public pipeline because it changes both architecture and loss, making the loss comparison less persuasive.
 
 `rf` remains a non-neural random forest baseline.
 

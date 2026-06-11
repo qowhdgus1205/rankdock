@@ -85,7 +85,7 @@ python scripts/run_rankdock.py \
 
 The `--m2_model` options share the same `RankModel` architecture except `rf`:
 
-- `mlp` / `rank_mse`: RankModel trained with MSE regression on docking scores
+- `mlp`: RankModel trained with MSE regression on docking scores
 - `triplet`: RankModel trained with triplet ranking loss
 - `pairwise`: RankModel trained with pairwise logistic ranking loss
 - `rf`: Random forest regression baseline
