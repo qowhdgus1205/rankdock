@@ -1,20 +1,6 @@
-# RankDock
+# Overview
 
 RankDock is a rank-learning active-learning pipeline for large-scale molecular docking screens. It supports molecular embedding generation, LSH-based initial sampling, Bayesian-optimization-style candidate selection, RankModel baselines, random forest baselines, and retrieval/diversity analysis.
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Repository Layout](#repository-layout)
-- [Data Provenance](#data-provenance)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Running](#running)
-- [Validation and Reproducibility Checks](#validation-and-reproducibility-checks)
-- [Optional Settings](#optional-settings)
-- [Outputs and Large Files](#outputs-and-large-files)
-
-## Overview
 
 RankDock is organized around a practical screening loop:
 
@@ -30,6 +16,17 @@ The public neural M2 baselines use the same `RankModel` backbone so that compari
 - `triplet`: RankModel trained with triplet ranking loss
 - `pairwise`: RankModel trained with pairwise logistic ranking loss
 - `rf`: random forest regression baseline
+
+## Table of Contents
+
+- [Repository Layout](#repository-layout)
+- [Data Provenance](#data-provenance)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Running](#running)
+- [Validation and Reproducibility Checks](#validation-and-reproducibility-checks)
+- [Optional Settings](#optional-settings)
+- [Outputs and Large Files](#outputs-and-large-files)
 
 ## Repository Layout
 
@@ -203,11 +200,10 @@ python -m py_compile \
 Useful active-learning options:
 
 - `--m2_model {mlp,triplet,pairwise,rf}`: choose the M2 baseline.
-- `--acq {greedy,lcb,ucb,poi,eoi}`: choose acquisition mode.
+- `--acq {greedy,ucb,poi,eoi}`: choose acquisition mode.
 - `--rounds`: number of active-learning rounds.
 - `--select_frac`: fraction selected per round.
 - `--seed`: reproducibility seed.
-- `--skip_final_ranking`: run round bookkeeping without full-pool final ranking.
 - `--round_selected_dir`: save per-round selections.
 - `--round_cumulative_dir`: save cumulative selections.
 - `--metrics_out`: save JSON metrics.
@@ -215,7 +211,7 @@ Useful active-learning options:
 
 Performance-related options:
 
-- `--num_workers`, `--pin_memory`, `--persistent_workers`, `--prefetch_factor`
+- `--num_workers`
 - `--m2_train_bs`, `--m2_pred_bs`
 - `--rf_n_jobs`
 - `--no_compile` to disable `torch.compile`
