@@ -8,7 +8,7 @@ python scripts/run_rankdock.py \
   --rounds 10 \
   --select_frac 0.001 \
   --final_top_frac 0.01 \
-  --m2_model pairwise \
+  --model pairwise \
   --acq greedy \
   --out_csv outputs/enamine2m_lsh_init0p2/bo/pairwise_greedy/top1pct.csv \
   --round_selected_dir outputs/enamine2m_lsh_init0p2/bo/pairwise_greedy/round_selected \

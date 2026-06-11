@@ -7,10 +7,10 @@ RankDock is organized around a practical screening loop:
 1. Generate graph and SMILES embeddings for a docking-score table.
 2. Concatenate embeddings into row-aligned `part_*.npy` files.
 3. Select an initial diverse sample with LSH.
-4. Run active learning with one of the supported M2 baselines.
+4. Run active learning with one of the supported model baselines.
 5. Summarize round-wise retrieval and diversity.
 
-The public neural M2 baselines use the same `RankModel` backbone so that comparisons isolate the training objective:
+The public neural baselines use the same `RankModel` backbone so that comparisons isolate the training objective:
 
 - `mlp`: RankModel trained with MSE regression on docking scores
 - `triplet`: RankModel trained with triplet ranking loss
@@ -83,7 +83,7 @@ conda env create -f rankdock/environment.yaml
 conda activate rankdock
 ```
 
-GPU/CUDA is optional for smoke tests and analysis scripts, but strongly recommended for large embedding generation and neural M2 training. CPU execution is supported for lightweight validation.
+GPU/CUDA is optional for smoke tests and analysis scripts, but strongly recommended for large embedding generation and neural model training. CPU execution is supported for lightweight validation.
 
 ## Installation
 
@@ -144,7 +144,7 @@ python scripts/run_rankdock.py \
   --smiles_csv data/merged_smiles.csv \
   --emb_dir output/combined_embeddings \
   --init_csv outputs/initial_selected_samples.csv \
-  --m2_model pairwise \
+  --model pairwise \
   --acq greedy \
   --out_csv outputs/top1_pairwise.csv
 ```
@@ -199,7 +199,7 @@ python -m py_compile \
 
 Useful active-learning options:
 
-- `--m2_model {mlp,triplet,pairwise,rf}`: choose the M2 baseline.
+- `--model {mlp,triplet,pairwise,rf}`: choose the model baseline.
 - `--acq {greedy,ucb,poi,eoi}`: choose acquisition mode.
 - `--rounds`: number of active-learning rounds.
 - `--select_frac`: fraction selected per round.
@@ -212,7 +212,7 @@ Useful active-learning options:
 Performance-related options:
 
 - `--num_workers`
-- `--m2_train_bs`, `--m2_pred_bs`
+- `--model_train_bs`, `--model_pred_bs`
 - `--rf_n_jobs`
 - `--no_compile` to disable `torch.compile`
 

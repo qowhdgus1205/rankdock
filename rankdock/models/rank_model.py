@@ -281,9 +281,9 @@ def predict_with_m2_model(df, model, feature_col="combined_embedding", batch_siz
     class_probs = []
 
     with torch.no_grad():
-        for batch_data in tqdm(latent_loader, desc="Predicting with M2 Model"):
+        for batch_data in tqdm(latent_loader, desc="Predicting with RankModel"):
             batch_data = batch_data.to(device)  # GPU/CPU 전송
-            probs = model(batch_data)  # M2 모델 출력
+            probs = model(batch_data)
             class_probs.append(probs.cpu())  # 결과를 CPU로 이동 후 저장
 
     # ✅ 리스트를 텐서로 병합

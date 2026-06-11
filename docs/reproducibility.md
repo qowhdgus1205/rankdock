@@ -4,7 +4,7 @@ This repository is organized so that model comparisons isolate the training obje
 
 ## Model Baselines
 
-All neural M2 baselines use the same `RankModel` backbone:
+All neural baselines use the same `RankModel` backbone:
 
 - `mlp`: MSE regression on docking scores
 - `triplet`: triplet ranking objective

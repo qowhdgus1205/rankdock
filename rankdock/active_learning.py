@@ -392,7 +392,7 @@ def forward_triplet_scores(model, q, p, n):
     return q_s, p_s, n_s
 
 # =========================
-# 5) Train M2 with AMP+DDP (handle None batch)
+# 5) Train RankModel with AMP+DDP (handle None batch)
 # =========================
 def train_rankdnn_ddp(
     model_ddp, train_loader, val_loader, optimizer, device,
@@ -479,7 +479,7 @@ def train_rankdnn_ddp(
             avg_va = float(t[1].item())
 
         if rank == 0 and (ep % 10 == 0 or ep == epochs - 1):
-            print(f"[M2] ep {ep+1:4d} | train {avg_tr:.6f} | val {avg_va:.6f}")
+            print(f"[RankModel] ep {ep+1:4d} | train {avg_tr:.6f} | val {avg_va:.6f}")
 
         # -----------------
         # early stopping: decide on rank0 and broadcast stop flag
@@ -509,7 +509,7 @@ def train_rankdnn_ddp(
 
         if stop:
             if rank == 0:
-                print(f"\n[M2] Early stopping at ep {ep+1}")
+                print(f"\n[RankModel] Early stopping at ep {ep+1}")
             break
 
     # -----------------
@@ -525,7 +525,7 @@ def train_rankdnn_ddp(
     dist_barrier()
 
     if rank == 0 and best_state is not None:
-        print(f"\n[M2] restored best val={best_val:.4f}")
+        print(f"\n[RankModel] restored best val={best_val:.4f}")
 
 def train_pairwise_ddp(
     model_ddp, train_loader, val_loader, optimizer, device,
@@ -588,7 +588,7 @@ def train_pairwise_ddp(
         val_avg = val_loss / max(val_steps, 1)
 
         if rank == 0 and (ep % 10 == 0 or ep == epochs - 1):
-            print(f"[M2] ep {ep+1:4d} | train {tr_avg:.6f} | val {val_avg:.6f}")
+            print(f"[RankModel] ep {ep+1:4d} | train {tr_avg:.6f} | val {val_avg:.6f}")
 
         if val_avg < best_val - 1e-6:
             best_val = val_avg
@@ -607,7 +607,7 @@ def train_pairwise_ddp(
             stop = bool(st.item())
         if stop:
             if rank == 0:
-                print(f"\n[M2] Early stopping at ep {ep+1}")
+                print(f"\n[RankModel] Early stopping at ep {ep+1}")
             break
 
     if dist.is_initialized():
@@ -617,7 +617,7 @@ def train_pairwise_ddp(
         unwrap_model(model_ddp).load_state_dict(best_state, strict=True)
     dist_barrier()
     if rank == 0 and best_state is not None:
-        print(f"\n[M2] restored best val={best_val:.4f}")
+        print(f"\n[RankModel] restored best val={best_val:.4f}")
 
 def prepare_regression_dataloaders_ddp(df, batch_size, split_ratio, rank, world, num_workers=4, seed=2025,
                                        pin_memory=True, persistent_workers=True, prefetch_factor=3):
@@ -712,7 +712,7 @@ def train_regression_ddp(
         val_avg = val_loss / max(val_steps, 1)
 
         if rank == 0 and (ep % 10 == 0 or ep == epochs - 1):
-            print(f"[M2] ep {ep+1:4d} | train {tr_avg:.6f} | val {val_avg:.6f}")
+            print(f"[RankModel] ep {ep+1:4d} | train {tr_avg:.6f} | val {val_avg:.6f}")
 
         if val_avg < best_val - 1e-6:
             best_val = val_avg
@@ -731,7 +731,7 @@ def train_regression_ddp(
             stop = bool(st.item())
         if stop:
             if rank == 0:
-                print(f"\n[M2] Early stopping at ep {ep+1}")
+                print(f"\n[RankModel] Early stopping at ep {ep+1}")
             break
 
     if dist.is_initialized():
@@ -741,9 +741,9 @@ def train_regression_ddp(
         unwrap_model(model_ddp).load_state_dict(best_state, strict=True)
     dist_barrier()
     if rank == 0 and best_state is not None:
-        print(f"\n[M2] restored best val={best_val:.4f}")
+        print(f"\n[RankModel] restored best val={best_val:.4f}")
 # =========================
-# 6) Sharded prediction: M2 raw
+# 6) Sharded prediction: rank-model raw scores
 # =========================
 @torch.no_grad()
 def predict_m2_raw_sharded(model, feats: PartMemmap, all_indices: np.ndarray, rank, world,
@@ -1298,7 +1298,7 @@ def run_bo(args):
             "rounds": int(args.rounds),
             "select_frac": float(args.select_frac),
             "acq": args.acq,
-            "m2_model": args.m2_model,
+            "model": args.m2_model,
             "final_top_frac": float(args.final_top_frac),
             "seed": int(args.seed),
         },
@@ -1473,7 +1473,7 @@ def run_bo(args):
                 try:
                     from sklearn.ensemble import RandomForestRegressor
                 except Exception as e:
-                    raise RuntimeError("scikit-learn is required for m2_model=rf") from e
+                    raise RuntimeError("scikit-learn is required for model=rf") from e
                 X = np.vstack(df_labeled["combined_embedding"].values).astype(np.float32, copy=False)
                 y = df_labeled["Score"].to_numpy(np.float32, copy=False)
                 rf = RandomForestRegressor(
@@ -1780,7 +1780,7 @@ def run_bo(args):
             try:
                 from sklearn.ensemble import RandomForestRegressor
             except Exception as e:
-                raise RuntimeError("scikit-learn is required for m2_model=rf") from e
+                raise RuntimeError("scikit-learn is required for model=rf") from e
             X = np.vstack(df_labeled["combined_embedding"].values).astype(np.float32, copy=False)
             y = df_labeled["Score"].to_numpy(np.float32, copy=False)
             rf = RandomForestRegressor(
@@ -1928,17 +1928,27 @@ def parse_args():
     p.add_argument("--svgp_finetune", type=int, default=0)
     p.add_argument("--svgp_finetune_every", type=int, default=1)
 
-    # M2
-    p.add_argument("--m2_model", type=str, default="triplet", choices=["triplet", "pairwise", "mlp", "rf"])
-    p.add_argument("--m2_layers", type=int, default=2)
-    p.add_argument("--m2_dropout", type=float, default=0.3)
-    p.add_argument("--m2_lr", type=float, default=1e-3)
-    p.add_argument("--m2_wd", type=float, default=1e-4)
-    p.add_argument("--m2_train_bs", type=int, default=4096)
-    p.add_argument("--m2_pred_bs", type=int, default=4096)
-    p.add_argument("--m2_epochs", type=int, default=200)
-    p.add_argument("--m2_patience", type=int, default=50)
-    p.add_argument("--m2_split", type=float, default=0.9)
+    # Rank model objective
+    p.add_argument("--model", dest="m2_model", type=str, default="triplet", choices=["triplet", "pairwise", "mlp", "rf"])
+    p.add_argument("--m2_model", dest="m2_model", type=str, choices=["triplet", "pairwise", "mlp", "rf"], help=argparse.SUPPRESS)
+    p.add_argument("--model_layers", dest="m2_layers", type=int, default=2, metavar="MODEL_LAYERS")
+    p.add_argument("--model_dropout", dest="m2_dropout", type=float, default=0.3, metavar="MODEL_DROPOUT")
+    p.add_argument("--model_lr", dest="m2_lr", type=float, default=1e-3, metavar="MODEL_LR")
+    p.add_argument("--model_wd", dest="m2_wd", type=float, default=1e-4, metavar="MODEL_WD")
+    p.add_argument("--model_train_bs", dest="m2_train_bs", type=int, default=4096, metavar="MODEL_TRAIN_BS")
+    p.add_argument("--model_pred_bs", dest="m2_pred_bs", type=int, default=4096, metavar="MODEL_PRED_BS")
+    p.add_argument("--model_epochs", dest="m2_epochs", type=int, default=200, metavar="MODEL_EPOCHS")
+    p.add_argument("--model_patience", dest="m2_patience", type=int, default=50, metavar="MODEL_PATIENCE")
+    p.add_argument("--model_split", dest="m2_split", type=float, default=0.9, metavar="MODEL_SPLIT")
+    p.add_argument("--m2_layers", dest="m2_layers", type=int, help=argparse.SUPPRESS)
+    p.add_argument("--m2_dropout", dest="m2_dropout", type=float, help=argparse.SUPPRESS)
+    p.add_argument("--m2_lr", dest="m2_lr", type=float, help=argparse.SUPPRESS)
+    p.add_argument("--m2_wd", dest="m2_wd", type=float, help=argparse.SUPPRESS)
+    p.add_argument("--m2_train_bs", dest="m2_train_bs", type=int, help=argparse.SUPPRESS)
+    p.add_argument("--m2_pred_bs", dest="m2_pred_bs", type=int, help=argparse.SUPPRESS)
+    p.add_argument("--m2_epochs", dest="m2_epochs", type=int, help=argparse.SUPPRESS)
+    p.add_argument("--m2_patience", dest="m2_patience", type=int, help=argparse.SUPPRESS)
+    p.add_argument("--m2_split", dest="m2_split", type=float, help=argparse.SUPPRESS)
     p.add_argument("--semi_hard_pos_window", type=int, default=0)
     p.add_argument("--semi_hard_neg_window", type=int, default=0)
     p.add_argument("--semi_hard_pos_frac", type=float, default=0.0)
@@ -1948,7 +1958,7 @@ def parse_args():
     p.add_argument("--margin", type=float, default=0.3)
     p.add_argument("--lambda_rank", type=float, default=0.01)
 
-    # RandomForest (m2_model=rf)
+    # RandomForest (model=rf)
     p.add_argument("--rf_n_estimators", type=int, default=200)
     p.add_argument("--rf_max_depth", type=int, default=None)
     p.add_argument("--rf_min_samples_split", type=int, default=2)
@@ -1979,13 +1989,13 @@ def parse_args():
         "--pairwise_select_pool_mul",
         type=float,
         default=1.8,
-        help="For m2_model=pairwise: sample k picks from top (k*pool_mul) candidates.",
+        help="For model=pairwise: sample k picks from top (k*pool_mul) candidates.",
     )
     p.add_argument(
         "--pairwise_select_temp",
         type=float,
         default=0.35,
-        help="For m2_model=pairwise: temperature for top-pool sampling (0 => deterministic top-k).",
+        help="For model=pairwise: temperature for top-pool sampling (0 => deterministic top-k).",
     )
 
     return p.parse_args()

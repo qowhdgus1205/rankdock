@@ -94,12 +94,12 @@ python scripts/run_rankdock.py \
   --smiles_csv data/merged_smiles.csv \
   --emb_dir output/combined_embeddings \
   --init_csv outputs/initial_selected_samples.csv \
-  --m2_model pairwise \
+  --model pairwise \
   --acq greedy \
   --out_csv outputs/top1_pairwise.csv
 ```
 
-The `--m2_model` options share the same `RankModel` architecture except `rf`:
+The `--model` options share the same `RankModel` architecture except `rf`:
 
 - `mlp`: RankModel trained with MSE regression on docking scores
 - `triplet`: RankModel trained with triplet ranking loss
