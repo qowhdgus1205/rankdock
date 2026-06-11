@@ -171,7 +171,7 @@ python scripts/validate_embeddings.py \
   --combined_dir output/combined_embeddings
 ```
 
-For a lightweight internal concat check without ChemBERTa re-embedding:
+For a concat check without ChemBERTa re-embedding:
 
 ```bash
 python scripts/validate_embeddings.py \
@@ -179,8 +179,6 @@ python scripts/validate_embeddings.py \
   --smiles_dir output/smiles/2M \
   --graph_dir output/graph/2M \
   --combined_dir output/combined_embeddings/2M \
-  --K_internal 5000 \
-  --K_csv 0 \
   --device cpu
 ```
 
