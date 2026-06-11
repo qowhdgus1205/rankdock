@@ -1,6 +1,6 @@
 # RankDock
 
-RankDock is a rank-learning active-learning pipeline for large-scale molecular docking screens. The code in this repository supports the workflow used in `sn-article_main.pdf`: embedding generation, LSH-based initialization, Bayesian optimization with RankModel baselines, and retrieval/diversity analysis.
+RankDock is a rank-learning active-learning pipeline for large-scale molecular docking screens. The code in this repository supports embedding generation, LSH-based initialization, Bayesian optimization with RankModel baselines, and retrieval/diversity analysis for ultra-large docking datasets such as those described by Lyu et al., *Nature* 566, 224-229 (2019), doi: [10.1038/s41586-019-0917-9](https://doi.org/10.1038/s41586-019-0917-9).
 
 ## Repository Layout
 

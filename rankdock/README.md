@@ -1,6 +1,6 @@
 # RankDock
 
-RankDock is a rank-learning active-learning pipeline for large-scale molecular docking screens. The code in this repository supports the workflow used in `sn-article_main.pdf`: embedding generation, LSH-based initialization, Bayesian optimization with RankModel baselines, and retrieval/diversity analysis.
+RankDock is a rank-learning active-learning pipeline for large-scale molecular docking screens. The code in this repository supports embedding generation, LSH-based initialization, Bayesian optimization with RankModel baselines, and retrieval/diversity analysis for ultra-large docking datasets such as those described by Lyu et al., *Nature* 566, 224-229 (2019), doi: [10.1038/s41586-019-0917-9](https://doi.org/10.1038/s41586-019-0917-9).
 
 ## Repository Layout
 
@@ -20,7 +20,7 @@ examples/                 # Small example configs or command templates
 results/                  # Cumulative selected-compound CSVs and summaries
 ```
 
-The manuscript score CSVs are not committed to this repository. We use docking scores derived from the ultra-large docking data described by Lyu et al., *Nature* 566, 224-229 (2019), "Ultra-large library docking for discovering new chemotypes". Place local CSV copies under `data/` as described in [data/README.md](data/README.md). Generated embeddings, pretrained checkpoints, and docking outputs should stay under `models/`, `output/`, or `outputs/` locally.
+The manuscript score CSVs are not committed to this repository. We use docking scores derived from the ultra-large docking data described by Lyu et al., "Ultra-large library docking for discovering new chemotypes," *Nature* 566, 224-229 (2019), doi: [10.1038/s41586-019-0917-9](https://doi.org/10.1038/s41586-019-0917-9). Place local CSV copies under `data/` as described in [data/README.md](data/README.md). Generated embeddings, pretrained checkpoints, and docking outputs should stay under `models/`, `output/`, or `outputs/` locally.
 
 Precomputed cumulative selection CSVs and summary metrics are included under [results/](results/), so reviewers can inspect round-wise outputs without downloading the full score tables.
 
