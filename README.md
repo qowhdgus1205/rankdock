@@ -1,6 +1,6 @@
 # RankDock
 
-RankDock is a rank-learning active-learning pipeline for large-scale molecular docking screens. The code in this repository supports embedding generation, LSH-based initialization, Bayesian optimization with RankModel baselines, and retrieval/diversity analysis for ultra-large docking datasets such as those described by Lyu et al., *Nature* 566, 224-229 (2019), doi: [10.1038/s41586-019-0917-9](https://doi.org/10.1038/s41586-019-0917-9).
+RankDock is a rank-learning active-learning pipeline for large-scale molecular docking screens. It supports embedding generation, LSH-based initialization, Bayesian optimization with RankModel baselines, and retrieval/diversity analysis.
 
 ## Repository Layout
 
@@ -19,7 +19,12 @@ docs/                     # Notes for reproducing manuscript analyses
 examples/                 # Small example configs or command templates
 ```
 
-The manuscript score CSVs live under `rankdock/data/`. These CSVs are large, so they should be committed with Git LFS. Generated embeddings, pretrained checkpoints, and docking outputs should stay under `models/`, `output/`, or `outputs/` locally.
+The score CSVs live under `rankdock/data/` or `data/` locally. These CSVs are large, so they should be kept out of ordinary Git history or committed with Git LFS. Generated embeddings, pretrained checkpoints, and docking outputs should stay under `models/`, `output/`, or `outputs/` locally.
+
+## Data Provenance
+
+- `138M_scores.csv`: docking scores derived from the ultra-large library docking screen reported by Lyu et al., "Ultra-large library docking for discovering new chemotypes," *Nature* 566, 224-229 (2019), doi: [10.1038/s41586-019-0917-9](https://doi.org/10.1038/s41586-019-0917-9).
+- `EnamineHTS_scores.csv`: Enamine HTS / Enamine2M docking benchmark table used through the MolPAL-style active-learning benchmark workflow; see Graff, Shakhnovich, and Coley, "Accelerating high-throughput virtual screening through molecular pool-based active learning," arXiv: [2012.07127](https://arxiv.org/abs/2012.07127).
 
 ## Installation
 
