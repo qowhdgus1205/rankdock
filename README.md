@@ -27,6 +27,7 @@ The public neural baselines use the same `RankModel` backbone so that comparison
 - [Validation](#validation)
 - [Optional Settings](#optional-settings)
 - [Outputs and Large Files](#outputs-and-large-files)
+- [License](#license)
 
 ## Repository Layout
 
@@ -229,3 +230,9 @@ Large files are intentionally kept out of the repository:
 - receptor-specific docking folders
 
 This repository includes lightweight summaries and Enamine2M cumulative selections under `rankdock/results/`. The larger 138M cumulative selection files should be distributed separately, for example through Git LFS, GitHub Releases, or an external artifact store.
+
+## License
+
+The RankDock source code is released under the MIT License. See [LICENSE](LICENSE).
+
+Docking score tables, molecular libraries, pretrained checkpoints, and third-party model weights are not covered by this repository license. Use and redistribution of those assets should follow the terms from their original providers, including Enamine, MolPAL-related benchmark resources, MolCLR, ChemBERTa, and the cited docking datasets.
